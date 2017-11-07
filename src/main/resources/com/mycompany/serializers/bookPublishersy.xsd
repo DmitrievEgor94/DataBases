@@ -1,0 +1,92 @@
+<xs:schema elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Publishers">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Publisher" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="publisherName" name="name"/>
+                            <xs:element name="Books">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Book" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="bookTitle" name="title"/>
+                                                    <xs:element type="zdate" name="publicationDate"/>
+                                                    <xs:element name="Authors">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Author" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="authorName" name="name"/>
+                                                                            <xs:element type="zdate"
+                                                                                        name="dayOfBirthDay"/>
+                                                                            <xs:element type="deathDate"
+                                                                                        name="dayOfDeath"/>
+                                                                            <xs:element type="sex" name="sex"/>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="zdate">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[012]).\d\d\d\d"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="deathDate">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[012]).\d\d\d\d|-"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="sex">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MALE"/>
+            <xs:enumeration value="FEMALE"/>
+            <xs:enumeration value="male"/>
+            <xs:enumeration value="female"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="authorName">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="bookTitle">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="publisherName">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="40"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+</xs:schema>
