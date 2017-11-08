@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ApplicationStarter {
 
@@ -86,16 +85,6 @@ public class ApplicationStarter {
             List<Author> authors = container.getAuthors();
             List<Book> books = container.getBooks();
             List<Publisher> publishers = container.getPublishers();
-
-            AtomicInteger counter = new AtomicInteger(0);
-
-            authors.forEach(author -> author.setId(counter.incrementAndGet()));
-            counter.set(0);
-
-            books.forEach(book -> book.setId(counter.incrementAndGet()));
-            counter.set(0);
-
-            publishers.forEach(publisher -> publisher.setId(counter.incrementAndGet()));
 
             authors.forEach(authorDao::insert);
             books.forEach(bookDao::insert);

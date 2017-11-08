@@ -8,7 +8,7 @@ import com.mycompany.models.readers.BooksListCreator;
 import com.mycompany.serializers.Serializer;
 import com.mycompany.serializers.xmlformat.GetterAuthorsFromBooks;
 import com.mycompany.serializers.xmlformat.GetterBooksFromPublishers;
-import com.mycompany.serializers.xmlformat.GetterUnicElements;
+import com.mycompany.serializers.xmlformat.GetterUniqueElements;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,7 +58,7 @@ public class XmlDomSerializer implements Serializer {
 
             List<Author> authors = GetterAuthorsFromBooks.get(books);
 
-            return GetterUnicElements.get(authors, books, publishers);
+            return GetterUniqueElements.get(authors, books, publishers);
 
         } catch (ParserConfigurationException | SAXException e) {
             log.error(e);

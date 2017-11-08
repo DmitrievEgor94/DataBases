@@ -6,10 +6,7 @@ import com.mycompany.models.Author;
 import com.mycompany.models.Book;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,12 +75,17 @@ public class BookDaoImpl implements BookDao {
     @Override
     public void insert(Book book) {
         try {
-            PreparedStatement statementForBooks = connection.prepareStatement(SQL_INSERT_BOOKS);
+            PreparedStatement statementForBooks = connection.prepareStatement(SQL_INSERT_BOOKS, Statement.RETURN_GENERATED_KEYS);
 
-            statementForBooks.setInt(1, book.getId());
-            statementForBooks.setString(2, book.getTitle());
-            statementForBooks.setDate(3, valueOf(book.getPublicationDate()));
+            statementForBooks.setString(1, book.getTitle());
+            statementForBooks.setDate(2, valueOf(book.getPublicationDate()));
             statementForBooks.execute();
+
+            ResultSet generatedKeys = statementForBooks.getGeneratedKeys();
+
+            generatedKeys.next();
+
+            book.setId(generatedKeys.getInt(1));
 
             PreparedStatement statementForBooksAuthors = connection.prepareStatement(SQL_INSERT_BOOKS_AUTHORS);
 
@@ -98,13 +100,37 @@ public class BookDaoImpl implements BookDao {
         } catch (SQLException e) {
             log.error(e);
         }
-
     }
 
     @Override
     public void update(Book book) {
-        delete(book);
-        insert(book);
+        try {
+            PreparedStatement updateStatement = connection.prepareStatement(SQL_UPDATE);
+
+            updateStatement.setString(1, book.getTitle());
+            updateStatement.setDate(2, valueOf(book.getPublicationDate()));
+            updateStatement.setInt(3, book.getId());
+
+            updateStatement.execute();
+
+            PreparedStatement deleteStatement = connection.prepareStatement(SQL_DELETE_BOOKS_AUTHORS);
+            deleteStatement.setInt(1, book.getId());
+            deleteStatement.execute();
+
+            PreparedStatement statementForBooksAuthors = connection.prepareStatement(SQL_INSERT_BOOKS_AUTHORS);
+            statementForBooksAuthors.execute();
+
+            if (book.getAuthors() != null) {
+                for (Author author : book.getAuthors()) {
+                    statementForBooksAuthors.setInt(1, book.getId());
+                    statementForBooksAuthors.setInt(2, author.getId());
+                    statementForBooksAuthors.execute();
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error(e);
+        }
     }
 
     @Override

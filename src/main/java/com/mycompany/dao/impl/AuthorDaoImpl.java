@@ -86,25 +86,29 @@ public class AuthorDaoImpl implements AuthorDao {
         return author;
     }
 
-
     @Override
     public void insert(Author author) {
         try {
-            PreparedStatement statement = connection.prepareStatement(SQL_INSERT);
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
 
-            statement.setInt(1, author.getId());
-            statement.setString(2, author.getName());
-            statement.setDate(3, valueOf(author.getDayOfBirthday()));
+            statement.setString(1, author.getName());
+            statement.setDate(2, valueOf(author.getDayOfBirthday()));
 
             if (author.getDayOfDeath() != null) {
-                statement.setDate(4, valueOf(author.getDayOfDeath()));
+                statement.setDate(3, valueOf(author.getDayOfDeath()));
             } else {
-                statement.setDate(4, null);
+                statement.setDate(3, null);
             }
 
-            statement.setString(5, author.getSex().toString());
+            statement.setString(4, author.getSex().toString());
 
             statement.execute();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+
+            generatedKeys.next();
+
+            author.setId(generatedKeys.getInt(1));
 
         } catch (SQLException e) {
             log.error(e);

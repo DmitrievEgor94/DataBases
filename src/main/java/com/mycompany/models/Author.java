@@ -11,7 +11,7 @@ public class Author {
     private LocalDate dayOfDeath;
     private Sex sex;
 
-    public enum Sex {MALE, FEMALE}
+    public enum Sex {MALE, FEMALE, male, female}
 
     public Author() {
     }

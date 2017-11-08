@@ -6,10 +6,7 @@ import com.mycompany.models.Book;
 import com.mycompany.models.Publisher;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,11 +71,16 @@ public class PublisherDaoImpl implements PublisherDao {
     @Override
     public void insert(Publisher publisher) {
         try {
-            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_PUBLISHERS);
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_PUBLISHERS, Statement.RETURN_GENERATED_KEYS);
 
-            statement.setInt(1, publisher.getId());
-            statement.setString(2, publisher.getName());
+            statement.setString(1, publisher.getName());
             statement.execute();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+
+            generatedKeys.next();
+
+            publisher.setId(generatedKeys.getInt(1));
 
             PreparedStatement statementPublishersBooks = connection.prepareStatement(SQL_INSERT_PUBLISHERS_BOOKS);
 
@@ -98,8 +100,31 @@ public class PublisherDaoImpl implements PublisherDao {
 
     @Override
     public void update(Publisher publisher) {
-        delete(publisher);
-        insert(publisher);
+        try {
+            PreparedStatement updatePublishers = connection.prepareStatement(SQL_UPDATE);
+
+            updatePublishers.setString(1, publisher.getName());
+            updatePublishers.setInt(2, publisher.getId());
+
+            updatePublishers.execute();
+
+            PreparedStatement deleteStatement = connection.prepareStatement(SQL_DELETE_BOOKS);
+            deleteStatement.setInt(1, publisher.getId());
+            deleteStatement.execute();
+
+            PreparedStatement statementForPublishersBooks = connection.prepareStatement(SQL_INSERT_PUBLISHERS_BOOKS);
+
+            if (publisher.getBooks() != null) {
+                for (Book book : publisher.getBooks()) {
+                    statementForPublishersBooks.setInt(1, book.getId());
+                    statementForPublishersBooks.setInt(2, book.getId());
+                    statementForPublishersBooks.execute();
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error(e);
+        }
     }
 
     @Override
