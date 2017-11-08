@@ -7,14 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 class ScriptsExecutor {
-     static void execute(Statement statement, String scriptFile ) throws IOException, SQLException {
-        BufferedReader in = new BufferedReader(new FileReader(scriptFile));
-        String str;
-        StringBuilder sb = new StringBuilder();
-        while ((str = in.readLine()) != null) {
-            sb.append(str).append("\n ");
+    static void execute(Statement statement, String scriptFile) throws IOException, SQLException {
+
+        try (BufferedReader in = new BufferedReader(new FileReader(scriptFile))) {
+            String str;
+            StringBuilder sb = new StringBuilder();
+            while ((str = in.readLine()) != null) {
+                sb.append(str).append("\n ");
+            }
+            in.close();
+            statement.executeUpdate(sb.toString());
         }
-        in.close();
-        statement.executeUpdate(sb.toString());
     }
 }

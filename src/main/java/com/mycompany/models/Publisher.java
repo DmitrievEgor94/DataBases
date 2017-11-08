@@ -50,7 +50,8 @@ public class Publisher {
 
         Publisher publisher = (Publisher) obj;
 
-        return this.name.equals(publisher.name) && this.books.equals(publisher.books);
+        return ((this.name == null) ? (publisher.name == null) : (this.name.equals(publisher.name))
+                && (this.books == null) ? (publisher.books == null) : (this.books.equals(publisher.books)));
 
     }
 }

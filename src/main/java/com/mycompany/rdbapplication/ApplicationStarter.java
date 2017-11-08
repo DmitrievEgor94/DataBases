@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class ApplicationStarter {
@@ -28,49 +29,46 @@ public class ApplicationStarter {
 
     public static void startApplication(boolean createDb) {
 
-        Connection connection;
+        try (Connection connection = DataSource.getConnection()) {
 
-        try {
             if (createDb) {
-                connection = DbCreator.createDb();
+                Statement statement = connection.createStatement();
 
-                if (connection == null) return;
+                String sqlScript = ApplicationStarter.class.getResource("tablesCreator.sql").getPath();
+
+                ScriptsExecutor.execute(statement, sqlScript);
 
                 insertData(connection);
-            } else {
-                connection = DataSource.getConnection();
             }
+
+            PublisherDao publisherDao = new PublisherDaoImpl(connection);
+
+            List<Publisher> publishers = publisherDao.findAll();
+            Viewer view = new PrinterOnConsole();
+
+            System.out.println("До удаления:");
+            view.showPublishers(publishers);
+            System.out.println();
+
+            System.out.println("После удаления:");
+            publisherDao.delete(publishers.get(0));
+            view.showPublishers(publisherDao.findAll());
+            System.out.println();
+
+            System.out.println("После вставки:");
+            publisherDao.insert(publishers.get(0));
+            view.showPublishers(publisherDao.findAll());
+            System.out.println();
+
+            System.out.println("После изменения:");
+            publishers.get(0).setBooks(null);
+            publisherDao.update(publishers.get(0));
+            view.showPublishers(publisherDao.findAll());
+            System.out.println();
+
         } catch (SQLException | IOException e) {
             log.error(e);
-            return;
         }
-
-        PublisherDao publisherDao = new PublisherDaoImpl(connection);
-
-        List<Publisher> publishers = publisherDao.findAll();
-        Viewer view = new PrinterOnConsole();
-
-        System.out.println("До удаления:");
-        view.showPublishers(publishers);
-        System.out.println();
-
-        System.out.println("После удаления:");
-        publisherDao.delete(publishers.get(0));
-        view.showPublishers(publisherDao.findAll());
-        System.out.println();
-
-        System.out.println("После вставки:");
-        publisherDao.insert(publishers.get(0));
-        view.showPublishers(publisherDao.findAll());
-        System.out.println();
-
-        System.out.println("После изменения:");
-        publishers.get(0).setBooks(null);
-        publisherDao.update(publishers.get(0));
-        view.showPublishers(publisherDao.findAll());
-        System.out.println();
-
-        DataSource.closeConnection(connection);
     }
 
     private static void insertData(Connection connection) {

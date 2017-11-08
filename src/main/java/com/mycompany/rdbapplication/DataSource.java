@@ -10,7 +10,8 @@ class DataSource {
 
     private static final Logger log = Logger.getLogger(ApplicationStarter.class);
 
-    private static final String URL = "jdbc:postgresql://localhost:5433/publishers";
+    private static final String DB_NAME = "postgres";
+    private static final String URL = "jdbc:postgresql://localhost:5433/" + DB_NAME;
     private static final String LOGIN = "postgres";
     private static final String PASSWORD = "1";
 
@@ -18,12 +19,4 @@ class DataSource {
         return DriverManager.getConnection(URL, LOGIN, PASSWORD);
     }
 
-    static void closeConnection(Connection connection) {
-        if (connection == null) return;
-        try {
-            connection.close();
-        } catch (SQLException e) {
-           log.error(e);
-        }
-    }
 }

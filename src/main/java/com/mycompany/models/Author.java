@@ -1,7 +1,6 @@
 package com.mycompany.models;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public class Author {
 
@@ -56,7 +55,6 @@ public class Author {
     }
 
 
-
     @Override
     public String toString() {
         return name;
@@ -80,24 +78,9 @@ public class Author {
 
         Author author = (Author) obj;
 
-        if (!this.name.equals(author.name)) {
-            return false;
-        }
-
-        if (!this.dayOfBirthday.equals(author.dayOfBirthday)) {
-            return false;
-        }
-
-        if (this.dayOfDeath == null) {
-            if (author.dayOfDeath != null) {
-                return false;
-            }
-        } else {
-            if (!this.dayOfDeath.equals(author.dayOfDeath)) {
-                return false;
-            }
-        }
-
-        return this.sex.equals(author.sex);
+        return ((this.name == null) ? (author.name == null) : (this.name.equals(author.name))
+                && (this.dayOfBirthday == null) ? (author.dayOfBirthday == null) : (this.dayOfBirthday.equals(author.dayOfBirthday))
+                && (this.dayOfDeath == null) ? (author.dayOfDeath == null) : (this.dayOfDeath.equals(author.dayOfDeath))
+                && (this.sex == null) ? (author.sex == null) : (this.sex.equals(author.sex)));
     }
 }
