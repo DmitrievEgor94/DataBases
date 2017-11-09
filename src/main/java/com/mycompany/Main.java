@@ -4,7 +4,7 @@ import com.mycompany.rdbapplication.ApplicationStarter;
 
 public class Main {
 
-    final static String CREATION_FLAG = "-cr";
+    private final static String CREATION_FLAG = "-cr";
 
     public static void main(String[] args) {
 
@@ -15,8 +15,6 @@ public class Main {
                 createTables = true;
             }
         }
-
-        System.out.println(createTables);
 
         ApplicationStarter.startApplication(createTables);
     }

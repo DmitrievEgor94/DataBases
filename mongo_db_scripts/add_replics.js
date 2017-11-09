@@ -9,17 +9,14 @@ rsconf = {
          }
 
 		 
-rs.reconfig(rsconf);
+rs.initiate(rsconf);
 
 rs.add("localhost:27018");
-rs.add("localhost:27019");
+rs.addArb("localhost:27019");
 
 cfg = rs.conf();
 
 cfg.members[1].priority = 0;
 cfg.members[1].slaveDelay = 100;
-
-cfg.members[2].priority = 0;
-cfg.members[2].slaveDelay = 100;
 
 rs.reconfig(cfg);

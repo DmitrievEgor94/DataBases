@@ -1,4 +1,4 @@
-db.publishers.insert([ {
+db.tyr.insert([ {
   "id" : 1,
   "name" : "Asgard",
   "books" : [ {

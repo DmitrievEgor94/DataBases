@@ -1,5 +1,5 @@
 call conf.bat
 
-"%mongo_dir%\mongo.exe" %db_name% publishers.js
+"%mongo_dir%\mongo.exe" --port 27017 %db_name% publishers.js
 
 pause
