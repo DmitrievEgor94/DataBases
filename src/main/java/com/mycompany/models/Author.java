@@ -1,6 +1,7 @@
 package com.mycompany.models;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Author {
 
@@ -69,6 +70,11 @@ public class Author {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(name, dayOfBirthday, dayOfDeath, sex);
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
 
@@ -78,9 +84,10 @@ public class Author {
 
         Author author = (Author) obj;
 
-        return ((this.name == null) ? (author.name == null) : (this.name.equals(author.name))
-                && (this.dayOfBirthday == null) ? (author.dayOfBirthday == null) : (this.dayOfBirthday.equals(author.dayOfBirthday))
-                && (this.dayOfDeath == null) ? (author.dayOfDeath == null) : (this.dayOfDeath.equals(author.dayOfDeath))
-                && (this.sex == null) ? (author.sex == null) : (this.sex.equals(author.sex)));
+        return ((this.name == null) ? (author.name == null) : (this.name.equals(author.name)))
+                && ((this.dayOfBirthday == null) ? (author.dayOfBirthday == null) : (this.dayOfBirthday.equals(author.dayOfBirthday)))
+                && ((this.dayOfDeath == null) ? (author.dayOfDeath == null) : (this.dayOfDeath.equals(author.dayOfDeath)))
+                && ((this.sex == null) ? (author.sex == null) : (this.sex.equals(author.sex)));
+
     }
 }

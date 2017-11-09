@@ -27,11 +27,11 @@ public class ApplicationStarter {
     private static final Logger log = Logger.getLogger(ApplicationStarter.class);
     private static final String FILE_WITH_OBJECTS = Serializer.class.getResource("bookPublishers.xml").getPath();
 
-    public static void startApplication(boolean createDb) {
+    public static void startApplication(boolean createTables) {
 
         try (Connection connection = DataSource.getConnection()) {
 
-            if (createDb) {
+            if (createTables) {
                 Statement statement = connection.createStatement();
 
                 String sqlScript = ApplicationStarter.class.getResource("tablesCreator.sql").getPath();
